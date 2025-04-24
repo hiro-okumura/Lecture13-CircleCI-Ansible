@@ -37,8 +37,8 @@ Resources:
   MyEIPAssociation:
     Type: AWS::EC2::EIPAssociation
     Properties:
-    AllocationId: !Ref ExistingEIP
-    InstanceId: !Ref MyEC2Instance
+      AllocationId: !Ref ExistingEIP
+      InstanceId: !Ref MyEC2Instance
 
   # ALB
   ApplicationLoadBalancer:
