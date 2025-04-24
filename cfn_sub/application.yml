@@ -24,7 +24,7 @@ Resources:
       NetworkInterfaces:
         - DeviceIndex: "0"
           SubnetId: !ImportValue ExportedPublicSubnet1Id
-          AssociatePublicIpAddress: true
+          # AssociatePublicIpAddress: true
           GroupSet:
             - !ImportValue ExportedEC2SecurityGroupId
       Tags:
