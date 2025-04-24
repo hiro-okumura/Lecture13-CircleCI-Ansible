@@ -1,0 +1,32 @@
+version: 2.1
+orbs:
+  python: circleci/python@2.0.3
+  aws-cli: circleci/aws-cli@5.3.2
+  ansible-playbook: orbss/ansible-playbook@0.0.5
+jobs:
+  execute-cfn:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws_access_key_id: AWS_ACCESS_KEY_ID
+          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+          region: AWS_DEFAULT_REGION
+      - run:
+          name: Deploy Cloudformation
+          command: |
+            aws cloudformation deploy --template-file cloudformation/*.yml --stack-name my-new-stack
+  execute-ansible:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - ansible/install:
+          ansible-version: 2.10.7
+
+workflows:
+  application-provisioning:
+    jobs:
+      - execute-cfn
+      - execute-ansible:
+          requires:
+            - execute-cfn
