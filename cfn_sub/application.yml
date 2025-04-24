@@ -26,7 +26,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-target-EC2
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # ALB
   ApplicationLoadBalancer:
@@ -34,7 +34,7 @@ Resources:
     Properties:
       Name: !Sub
         - ${ExportedBaseName}-ALB
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       Type: application
       Scheme: internet-facing
       IpAddressType: ipv4
