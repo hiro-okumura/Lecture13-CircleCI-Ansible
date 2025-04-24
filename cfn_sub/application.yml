@@ -7,10 +7,10 @@ Parameters:
     Type: String
     Default: my-ec2-key-pair
 
-  #ExistingEIP:
-  #Description: Enter the Allocation ID (eipalloc-xxxxxxxx)
-  #Type: String
-  #Default: # サンプル：eipalloc-0123456789abcdef0
+  ExistingEIP:
+    Description: Enter the Allocation ID
+    Type: String
+    Default: eipalloc-0ec9d5151feb2646e
 
 Resources:
   # ターゲットノード用のEC2インスタンス
@@ -34,11 +34,11 @@ Resources:
             - ExportedBaseName: !ImportValue ExportedBaseName
 
   # Elastic IPをEC2インスタンスに関連付ける
-  #MyEIPAssociation:
-  #Type: AWS::EC2::EIPAssociation
-  #Properties:
-  #AllocationId: !Ref ExistingEIP
-  #InstanceId: !Ref MyEC2Instance
+  MyEIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+    AllocationId: !Ref ExistingEIP
+    InstanceId: !Ref MyEC2Instance
 
   # ALB
   ApplicationLoadBalancer:
