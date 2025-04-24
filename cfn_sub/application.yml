@@ -47,7 +47,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-ALB
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # HTTPリスナー
   ApplicationListener:
@@ -66,7 +66,7 @@ Resources:
     Properties:
       Name: !Sub
         - ${ExportedBaseName}-Target-Group
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       Port: 80
       Protocol: HTTP
       TargetType: instance
@@ -87,7 +87,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-Target-Group
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # S3
   S3Bucket:
@@ -95,7 +95,7 @@ Resources:
     Properties:
       BucketName: !Sub
         - ${ExportedBaseName}-bucket
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -109,4 +109,4 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-S3
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName

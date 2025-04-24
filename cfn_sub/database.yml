@@ -16,7 +16,7 @@ Resources:
       DBName: lecture10db
       DBInstanceIdentifier: !Sub
         - ${ExportedBaseName}-database
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       AvailabilityZone: !Ref RDSAvailabilityZone
       Engine: mysql
       DBInstanceClass: db.t4g.micro
@@ -34,7 +34,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-Database
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # DBサブネットグループ
   DBSubnetGroup:
@@ -48,7 +48,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-DB-Subnet-Group
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # シークレットマネージャー For RDS
   RDSSecret:
@@ -64,4 +64,4 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-RDSSecret
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
