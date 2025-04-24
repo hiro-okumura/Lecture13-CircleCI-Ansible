@@ -7,34 +7,9 @@ Parameters:
     Type: String
     Default: my-ec2-key-pair
 
-  ExistingEIP:
-    Description: The Elastic IP to allow SSH access to the instance
-    Type: String
-    Default: 13.113.116.116
-
 Resources:
-  # コントロールノード用のEC2インスタンス
-  EC2Instance1:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId: ami-0174853074da9aa25
-      KeyName: !Ref KeyName
-      InstanceType: t2.micro
-      # IamInstanceProfile: !ImportValue ExportedS3InstanceProfile
-      NetworkInterfaces:
-        - DeviceIndex: "0"
-          SubnetId: !ImportValue ExportedPublicSubnet1Id
-          AssociatePublicIpAddress: true
-          GroupSet:
-            - !ImportValue ExportedEC2SecurityGroupId
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - ${ExportedBaseName}-ctrl-EC2
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
-
   # ターゲットノード用のEC2インスタンス
-  EC2Instance2:
+  EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-0174853074da9aa25
