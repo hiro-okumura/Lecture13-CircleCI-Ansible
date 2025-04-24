@@ -1,66 +1,18 @@
-<<<<<<< HEAD
 version: 2.1
 orbs:
   python: circleci/python@2.0.3
-  aws-cli: circleci/aws-cli@5.3.2
-  ansible-playbook: orbss/ansible-playbook@0.0.5
 jobs:
-  execute-cfn:
-    executor: aws-cli/default
+  cfn-lint:
+    executor: python/default
     steps:
       - checkout
-      - aws-cli/setup:
-          aws_access_key_id: AWS_ACCESS_KEY_ID
-          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-          region: AWS_DEFAULT_REGION
+      - run: pip install cfn-lint
       - run:
-          name: Deploy Cloudformation
+          name: run cfn-lint
           command: |
-            aws cloudformation deploy --template-file cloudformation/*.yml --stack-name my-new-stack
-  execute-ansible:
-    executor: ansible-playbook/default
-    steps:
-      - checkout
-      - ansible/install:
-          ansible-version: 2.10.7
+            cfn-lint -i W3002 -t cloudformation/templates/*.yml
 
 workflows:
-  application-provisioning:
+  raisetech:
     jobs:
-      - execute-cfn
-      - execute-ansible:
-          requires:
-            - execute-cfn
-=======
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/configuration-reference
-version: 2.1
-
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
-jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
-    docker:
-      # Specify the version you desire here
-      # See: https://circleci.com/developer/images/image/cimg/base
-      - image: cimg/base:current
-
-    # Add steps to the job
-    # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
-    steps:
-      # Checkout the code as the first step.
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-# Orchestrate jobs using workflows
-# See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
-workflows:
-  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
-    jobs:
-      - say-hello
->>>>>>> a88b0c33ca0cbc6bc9a0d35b46588eabebe9eff0
+      - cfn-lint
