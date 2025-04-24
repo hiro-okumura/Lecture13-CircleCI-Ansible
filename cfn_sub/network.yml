@@ -28,7 +28,7 @@ Parameters:
 
 Resources:
   # VPC
-  MyMyVPC:
+  MyVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref VpcCIDR
