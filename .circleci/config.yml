@@ -26,10 +26,14 @@ jobs:
           name: Deploy Cloudformation
           command: |
             set -x
-            aws cloudformation deploy --template-file test_cfn/network.yml --stack-name lecture13-network-stack
-            aws cloudformation deploy --template-file test_cfn/security.yml --stack-name lecture13-security-stack
-            aws cloudformation deploy --template-file test_cfn/application.yml --stack-name lecture13-application-stack
-            aws cloudformation deploy --template-file test_cfn/database.yml --stack-name lecture13-database-stack
+            aws cloudformation deploy --template-file test_cfn/network.yml \
+              --stack-name lecture13-network-stack
+            aws cloudformation deploy --template-file test_cfn/security.yml \
+              --stack-name lecture13-security-stack --capabilities CAPABILITY_NAMED_IAM
+            aws cloudformation deploy --template-file test_cfn/application.yml \
+              --stack-name lecture13-application-stack
+            aws cloudformation deploy --template-file test_cfn/database.yml \
+              --stack-name lecture13-database-stack
 
 workflows:
   lecture13-provisioning:
