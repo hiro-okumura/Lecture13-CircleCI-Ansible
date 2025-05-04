@@ -92,7 +92,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
       Path: "/"
-      tags:
+      Tags:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-S3Role
