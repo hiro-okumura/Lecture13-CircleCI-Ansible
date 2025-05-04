@@ -1,6 +1,8 @@
 version: 2.1
 orbs:
   python: circleci/python@2.0.3
+  aws-cli: circleci/aws-cli@5.3.2
+  ansible-playbook: orbss/ansible-playbook@0.0.5
 jobs:
   cfn-lint:
     executor: python/default
@@ -10,9 +12,29 @@ jobs:
       - run:
           name: run cfn-lint
           command: |
-            cfn-lint -i W3002 -t cfn_sub/*.yml
+            cfn-lint -i W3002 -t test_cfn/*.yml
+  execute-cfn:
+    executor: aws-cli/default
+    steps:
+      # リポジトリからソースコードを取得
+      - checkout
+      - aws-cli/setup:
+          aws_access_key_id: AWS_ACCESS_KEY_ID
+          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+          region: AWS_DEFAULT_REGION
+      - run:
+          name: Deploy Cloudformation
+          command: |
+            set -x
+            aws cloudformation deploy --template-file test_cfn/network.yml --stack-name lecture13-network-stack
+            aws cloudformation deploy --template-file test_cfn/security.yml lecture13-security-stack
+            aws cloudformation deploy --template-file test_cfn/application.yml lecture13-application-stack
+            aws cloudformation deploy --template-file test_cfn/database.yml lecture13-database-stack
 
 workflows:
-  raisetech:
+  lecture13-provisioning:
     jobs:
       - cfn-lint
+      - execute-cfn:
+          requires:
+            - cfn-lint
