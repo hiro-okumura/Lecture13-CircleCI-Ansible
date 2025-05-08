@@ -42,7 +42,7 @@ jobs:
           fingerprints:
             - "SHA256:aqr6t8pCA+QW0OsiGO1WMSM6W+YtT3SfaG5oOM1le7Y"
       - ansible-playbook/install:
-          ansible-version: 2.10.7
+          version: 2.10.7
       - aws-cli/setup:
           aws_access_key_id: AWS_ACCESS_KEY_ID
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
