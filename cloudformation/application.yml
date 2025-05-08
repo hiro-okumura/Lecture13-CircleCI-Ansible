@@ -1,59 +1,44 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Application Stack for RaiseTech Lecture10
+Description: Application Stack for RaiseTech Lecture13
 
 Parameters:
-  BaseName:
-    Type: String
-    Default: "raisetech-lecture13"
-
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instance
     Type: String
     Default: my-ec2-key-pair
 
   ExistingEIP:
-    Description: The Elastic IP to allow SSH access to the instance
+    Description: Enter the Allocation ID
     Type: String
-    Default: 13.113.116.116
+    Default: eipalloc-09ab06a3bb6a6912e
 
 Resources:
-  # コントロールノード用のEC2インスタンス
-  EC2Instance1:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId: ami-0174853074da9aa25
-      KeyName: !Ref KeyName
-      InstanceType: t2.micro
-      # IamInstanceProfile: !ImportValue ExportedS3InstanceProfile
-      NetworkInterfaces:
-        - DeviceIndex: "0"
-          SubnetId: !ImportValue ExportedPublicSubnet1Id
-          AssociatePublicIpAddress: true
-          GroupSet:
-            - !ImportValue ExportedEC2SecurityGroupId
-      Tags:
-        - Key: Name
-          Value: !Sub ${ExportedBaseName}-ctrl-EC2
-
   # ターゲットノード用のEC2インスタンス
-  EC2Instance2:
+  MyEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0174853074da9aa25
+      ImageId: ami-0edb5f56b431651a3
       KeyName: !Ref KeyName
       InstanceType: t2.micro
       IamInstanceProfile: !ImportValue ExportedS3InstanceProfile
       NetworkInterfaces:
         - DeviceIndex: "0"
           SubnetId: !ImportValue ExportedPublicSubnet1Id
-          AssociatePublicIpAddress: true
+          #AssociatePublicIpAddress: true
           GroupSet:
             - !ImportValue ExportedEC2SecurityGroupId
       Tags:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-target-EC2
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
+
+  # Elastic IPをEC2インスタンスに関連付ける
+  MyEIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      AllocationId: !Ref ExistingEIP
+      InstanceId: !Ref MyEC2Instance
 
   # ALB
   ApplicationLoadBalancer:
@@ -61,7 +46,7 @@ Resources:
     Properties:
       Name: !Sub
         - ${ExportedBaseName}-ALB
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       Type: application
       Scheme: internet-facing
       IpAddressType: ipv4
@@ -74,7 +59,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-ALB
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # HTTPリスナー
   ApplicationListener:
@@ -93,7 +78,7 @@ Resources:
     Properties:
       Name: !Sub
         - ${ExportedBaseName}-Target-Group
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       Port: 80
       Protocol: HTTP
       TargetType: instance
@@ -108,13 +93,13 @@ Resources:
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
       Targets:
-        - Id: !Ref EC2Instance
+        - Id: !Ref MyEC2Instance
           Port: 80
       Tags:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-Target-Group
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # S3
   S3Bucket:
@@ -122,18 +107,18 @@ Resources:
     Properties:
       BucketName: !Sub
         - ${ExportedBaseName}-bucket
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
+      #BucketEncryption:
+      #ServerSideEncryptionConfiguration:
+      #- ServerSideEncryptionByDefault:
+      #SSEAlgorithm: AES256
       Tags:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-S3
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
