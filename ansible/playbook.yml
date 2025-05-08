@@ -1,0 +1,7 @@
+- name: Deploy a Rails application on AWS using CloudFormation, Ansible, and CircleCI
+  hosts: targets
+  become: true
+  become_user: ec2-user
+
+  roles:
+    - role: yum

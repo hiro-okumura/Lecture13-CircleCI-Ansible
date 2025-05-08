@@ -1,11 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Database Stack for RaiseTech Lecture10
+Description: Database Stack for RaiseTech Lecture13
 
 Parameters:
-  BaseName:
-    Type: String
-    Default: "raisetech-lecture13"
-
   RDSAvailabilityZone:
     Description: The availability zone of the RDS
     Type: String
@@ -17,10 +13,10 @@ Resources:
     Type: AWS::RDS::DBInstance
     DependsOn: RDSSecret
     Properties:
-      DBName: lecture10db
+      DBName: lecture13db
       DBInstanceIdentifier: !Sub
         - ${ExportedBaseName}-database
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       AvailabilityZone: !Ref RDSAvailabilityZone
       Engine: mysql
       DBInstanceClass: db.t4g.micro
@@ -38,7 +34,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-Database
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # DBサブネットグループ
   DBSubnetGroup:
@@ -52,7 +48,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-DB-Subnet-Group
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # シークレットマネージャー For RDS
   RDSSecret:
@@ -68,4 +64,4 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-RDSSecret
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
