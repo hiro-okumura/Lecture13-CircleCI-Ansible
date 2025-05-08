@@ -3,6 +3,7 @@ orbs:
   python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@5.3.2
   ansible-playbook: orbss/ansible-playbook@0.0.5
+  ruby: circleci/ruby@2.5.3
 
 jobs:
   cfn-lint:
@@ -40,7 +41,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "SHA256:aqr6t8pCA+QW0OsiGO1WMSM6W+YtT3SfaG5oOM1le7Y"
-      - ansible/install:
+      - ansible-playbook/install:
           ansible-version: 2.10.7
       - aws-cli/setup:
           aws_access_key_id: AWS_ACCESS_KEY_ID
