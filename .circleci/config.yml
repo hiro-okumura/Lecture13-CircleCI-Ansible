@@ -6,15 +6,15 @@ orbs:
   ruby: circleci/ruby@2.5.3
 
 jobs:
-  #cfn-lint:
-  #executor: python/default
-  #steps:
-  #- checkout
-  #- run: pip install cfn-lint
-  #- run:
-  #name: run cfn-lint
-  #command: |
-  #cfn-lint -i W3002 -t cloudformation/*.yml
+  cfn-lint:
+    executor: python/default
+    steps:
+      - checkout
+      - run: pip install cfn-lint
+      - run:
+          name: run cfn-lint
+          command: |
+            cfn-lint -i W3002 -t cloudformation/*.yml
 
   execute-cfn:
     executor: aws-cli/default
@@ -54,10 +54,10 @@ jobs:
 workflows:
   lecture13-provisioning:
     jobs:
-      #- cfn-lint
+      - cfn-lint
       - execute-cfn:
-        #requires:
-        #- cfn-lint
+          requires:
+            - cfn-lint
       - execute-ansible:
           requires:
             - execute-cfn
