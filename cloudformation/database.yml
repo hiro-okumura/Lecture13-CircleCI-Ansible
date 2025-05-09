@@ -11,7 +11,7 @@ Resources:
   # RDS
   MyRDS:
     Type: AWS::RDS::DBInstance
-    DependsOn: RDSSecret
+    DependsOn: MyRDSSecret
     Properties:
       DBName: lecture13db
       DBInstanceIdentifier: !Sub
@@ -51,7 +51,7 @@ Resources:
             - ExportedBaseName: !ImportValue ExportedBaseName
 
   # シークレットマネージャー For RDS
-  RDSSecret:
+  MyRDSSecret:
     Type: "AWS::SecretsManager::Secret"
     Properties:
       Name: raisetech-rds-secret
