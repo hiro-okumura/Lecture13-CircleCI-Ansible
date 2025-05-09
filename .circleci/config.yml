@@ -48,8 +48,8 @@ jobs:
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
           region: AWS_DEFAULT_REGION
       - ansible-playbook/playbook:
-          playbook: ansible/playbook.yml
-          playbook-options: -i ansible/inventory.ini
+          playbook: playbook.yml
+          playbook-options: -i inventory.ini
 
 workflows:
   lecture13-provisioning:
