@@ -66,7 +66,7 @@ Resources:
             - ${ExportedBaseName}-RDSSecret
             - ExportedBaseName: !ImportValue ExportedBaseName
 
-  Outputs:
-    RDSEndpoint:
-      Description: Endpoint of RDS instance
-      Value: !GetAtt MyRDS.Endpoint.Address
+Outputs:
+  RDSEndpoint:
+    Description: Endpoint of RDS instance
+    Value: !GetAtt MyRDS.Endpoint.Address
