@@ -49,7 +49,7 @@ jobs:
           region: AWS_DEFAULT_REGION
       - ansible-playbook/playbook:
           playbook: playbook.yml
-          playbook-options: ANSIBLE_DEBUG=1 -i inventory.ini -vvv
+          playbook-options: -i inventory.ini -vvv
 
 workflows:
   lecture13-provisioning:
