@@ -10,7 +10,7 @@ Parameters:
   ExistingEIP:
     Description: Enter the Allocation ID
     Type: String
-    Default: eipalloc-0aef05a393d63aaf8
+    Default: eipalloc-00466e1d222c257ac
 
 Resources:
   # ターゲットノード用のEC2インスタンス

@@ -40,7 +40,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - SHA256:aqr6t8pCA+QW0OsiGO1WMSM6W+YtT3SfaG5oOM1le7Y
+            - "SHA256:BUEI3gQwoQlNCSWR9Shf235hGxiCAt214XuOvSbPjkA"
       - ansible-playbook/install:
           version: 2.10.7
       - aws-cli/setup:
