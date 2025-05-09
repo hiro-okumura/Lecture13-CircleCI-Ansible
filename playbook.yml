@@ -7,7 +7,10 @@
     app_dir: "/home/ec2-user/raisetech-live8-sample-app"
     ruby_version: "3.2.3"
     bundler_version: "2.3.14"
+    node_version: "17.9.1"
+    yarn_version: "1.22.19"
 
   roles:
     - role: yum
     - role: rbenv
+    - role: nodejs
