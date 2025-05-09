@@ -5,19 +5,19 @@ Parameters:
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instance
     Type: String
-    Default: my-ec2-key-pair
+    Default: ansible-ec2-keypair
 
   ExistingEIP:
     Description: Enter the Allocation ID
     Type: String
-    Default: eipalloc-09ab06a3bb6a6912e
+    Default: eipalloc-0aef05a393d63aaf8
 
 Resources:
   # ターゲットノード用のEC2インスタンス
   MyEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0edb5f56b431651a3
+      ImageId: ami-01749c4f2b5e4dffc
       KeyName: !Ref KeyName
       InstanceType: t2.micro
       IamInstanceProfile: !ImportValue ExportedS3InstanceProfile
