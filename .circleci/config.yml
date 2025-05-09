@@ -49,8 +49,8 @@ jobs:
           region: AWS_DEFAULT_REGION
       - ansible-playbook/playbook:
           playbook: ansible/playbook.yml
-          playbook-options: -u ec2-user -i ansible/inventory.ini ANSIBLE_HOST_KEY_CHECKING=false
-          #--ssh-extra-args='-o ControlMaster=auto -o ControlPersist=60s -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+          playbook-options: -i ansible/inventory.ini
+
 workflows:
   lecture13-provisioning:
     jobs:
