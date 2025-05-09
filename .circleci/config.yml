@@ -33,6 +33,7 @@ jobs:
             aws cloudformation deploy --template-file cloudformation/security.yml --stack-name lecture13-security-stack --capabilities CAPABILITY_NAMED_IAM
             aws cloudformation deploy --template-file cloudformation/application.yml --stack-name lecture13-application-stack
             aws cloudformation deploy --template-file cloudformation/database.yml --stack-name lecture13-database-stack
+
   execute-ansible:
     executor: ansible-playbook/default
     steps:
@@ -46,6 +47,14 @@ jobs:
           aws_access_key_id: AWS_ACCESS_KEY_ID
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
           region: AWS_DEFAULT_REGION
+
+      - run:
+          name: set environment vars
+          command: |
+            set -x
+            echo export AWS_RDS_PASSWORD=$(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query SecretString --output text | jq -r '.password') >> $BASH_ENV
+            echo export AWS_RDS_ENDPOINT="$(aws cloudformation describe-stacks --stack-name lecture13-database-stack --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" --output text)" >> $BASH_ENV
+
       - ansible-playbook/playbook:
           playbook: playbook.yml
           playbook-options: -i inventory.ini -vvv

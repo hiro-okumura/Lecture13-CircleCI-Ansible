@@ -9,8 +9,11 @@
     bundler_version: "2.3.14"
     node_version: "17.9.1"
     yarn_version: "1.22.19"
+    aws_db_password: "{{ lookup('env', 'AWS_RDS_PASSWORD') }}"
+    aws_db_endpoint: "{{ lookup('env', 'AWS_RDS_ENDPOINT') }}"
 
   roles:
     - role: yum
     - role: rbenv
     - role: nodejs
+    - role: mysql

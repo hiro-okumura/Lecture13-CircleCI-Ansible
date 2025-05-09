@@ -9,7 +9,7 @@ Parameters:
 
 Resources:
   # RDS
-  RDS:
+  MyRDS:
     Type: AWS::RDS::DBInstance
     DependsOn: RDSSecret
     Properties:
@@ -65,3 +65,8 @@ Resources:
           Value: !Sub
             - ${ExportedBaseName}-RDSSecret
             - ExportedBaseName: !ImportValue ExportedBaseName
+
+  Outputs:
+    RDSEndpoint:
+      Description: Endpoint of RDS instance
+      Value: !GetAtt MyRDS.Endpoint.Address
