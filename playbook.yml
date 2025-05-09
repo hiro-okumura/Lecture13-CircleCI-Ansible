@@ -3,5 +3,11 @@
   become: true
   become_user: ec2-user
 
+  vars:
+    app_dir: "/home/ec2-user/raisetech-live8-sample-app"
+    ruby_version: "3.2.3"
+    bundler_version: "2.3.14"
+
   roles:
     - role: yum
+    - role: rbenv
