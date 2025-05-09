@@ -18,8 +18,7 @@ default: &default
   username: admin
   password: {{ lookup('env', 'DB_PASSWORD') }}
   host: {{ lookup('env', 'DB_HOST') }}
-#  password: {{ aws_db_password }}
-#  host: {{ aws_db_endpoint }}
+
 
 development:
   <<: *default
