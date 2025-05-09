@@ -48,29 +48,12 @@ jobs:
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
           region: AWS_DEFAULT_REGION
 
-      #      - run:
-      #          name: set environment vars
-      #          command: |
-      #            set -x
-      #            echo export AWS_RDS_PASSWORD=$(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query SecretString --output text | jq -r '.password') >> $BASH_ENV
-      #            echo export AWS_RDS_ENDPOINT="$(aws cloudformation describe-stacks --stack-name lecture13-database-stack --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" --output text)" >> $BASH_ENV
-
       - run:
-          name: Get RDS password from AWS Secrets Manager
+          name: set environment vars
           command: |
-            DB_PASSWORD=$(aws secretsmanager get-secret-value \
-              --secret-id raisetech-rds-secret \
-              --query 'SecretString' \
-              --output text | jq '.password')
-            echo "export DB_PASSWORD=${DB_PASSWORD}" >> $BASH_ENV
-      - run:
-          name: Get DB endpoint
-          command: |
-            DB_HOST=$(aws cloudformation describe-stacks \
-              --stack-name lecture13-database-stack \
-              --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" \
-              --output text)
-            echo "export DB_HOST=${DB_HOST}" >> $BASH_ENV
+            set -x
+            echo export AWS_RDS_PASSWORD=$(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query SecretString --output text | jq -r '.password') >> $BASH_ENV
+            echo export AWS_RDS_ENDPOINT="$(aws cloudformation describe-stacks --stack-name lecture13-database-stack --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" --output text)" >> $BASH_ENV
 
       - ansible-playbook/playbook:
           playbook: playbook.yml
