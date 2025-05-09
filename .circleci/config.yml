@@ -33,14 +33,13 @@ jobs:
             aws cloudformation deploy --template-file cloudformation/security.yml --stack-name lecture13-security-stack --capabilities CAPABILITY_NAMED_IAM
             aws cloudformation deploy --template-file cloudformation/application.yml --stack-name lecture13-application-stack
             aws cloudformation deploy --template-file cloudformation/database.yml --stack-name lecture13-database-stack
-
   execute-ansible:
     executor: ansible-playbook/default
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:BUEI3gQwoQlNCSWR9Shf235hGxiCAt214XuOvSbPjkA"
+            - "SHA256:Zg3tPXldH212I6UD/wq3xpNHwu83GIwvWU9etbPkf7E"
       - ansible-playbook/install:
           version: 2.10.7
       - aws-cli/setup:
