@@ -1,6 +1,5 @@
 - name: Deploy a Rails application on AWS using CloudFormation, Ansible, and CircleCI
   hosts: all
-  #remote_user: ec2-user
   become: true
   become_user: ec2-user
 
