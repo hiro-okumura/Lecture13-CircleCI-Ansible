@@ -19,7 +19,6 @@ default: &default
   password: {{lookup('env', 'AWS_RDS_PASSWORD')}}
   host: {{lookup('env', 'AWS_RDS_ENDPOINT')}}
 
-
 development:
   <<: *default
   database: raisetech_live8_sample_app_development
