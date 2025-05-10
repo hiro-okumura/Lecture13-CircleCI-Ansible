@@ -122,3 +122,8 @@ Resources:
           Value: !Sub
             - ${ExportedBaseName}-S3
             - ExportedBaseName: !ImportValue ExportedBaseName
+
+OutPuts:
+  S3BucketName:
+    Description: S3 Bucket Name
+    Value: !Ref S3Bucket

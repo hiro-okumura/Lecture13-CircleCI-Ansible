@@ -14,4 +14,4 @@
     - role: yum
     - role: rbenv
     - role: nodejs
-    - role: mysql
+    - role: database
