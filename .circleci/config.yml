@@ -48,7 +48,7 @@ jobs:
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
           region: AWS_DEFAULT_REGION
 
-      - run:
+      - run: # 値が取得できていないため、コマンドを要修正
           name: set environment vars
           command: |
             set -x

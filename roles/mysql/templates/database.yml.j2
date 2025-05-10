@@ -16,8 +16,8 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: admin
-  password: {{ lookup('env', 'DB_PASSWORD') }}
-  host: {{ lookup('env', 'DB_HOST') }}
+  password: {{ lookup('env', 'AWS_RDS_PASSWORD') }}
+  host: {{ lookup('env', 'AWS_RDS_ENDPOINT') }}
 
 
 development:
