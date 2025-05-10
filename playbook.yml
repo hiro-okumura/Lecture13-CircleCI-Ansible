@@ -16,3 +16,4 @@
     - role: nodejs
     - role: database
     - role: app_server
+    - role: web_server
