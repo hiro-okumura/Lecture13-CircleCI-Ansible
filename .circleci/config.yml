@@ -66,6 +66,8 @@ jobs:
           playbook: playbook.yml
           playbook-options: -i inventory.ini -vvv
 
+  execute-serverspec:
+
 workflows:
   lecture13-provisioning:
     jobs:
