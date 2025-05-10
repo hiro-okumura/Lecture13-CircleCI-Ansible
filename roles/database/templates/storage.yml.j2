@@ -1,3 +1,5 @@
+# MEMO: jinja2でraisetech-live8-sample-app/config/storage.ymlにS3バケット名を追加
+
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
@@ -8,9 +10,9 @@ local:
 
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 amazon:
- service: S3
- region: ap-northeast-1
- bucket: {{ lookup('env', 'AWS_S3_BUCKET_NAME') }}
+  service: S3
+  region: ap-northeast-1
+  bucket: {{ lookup('env', 'AWS_S3_BUCKET_NAME') }}
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
