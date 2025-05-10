@@ -52,10 +52,12 @@ jobs:
           name: set environment vars
           command: |
             set -x
-            echo "export AWS_RDS_PASSWORD= \
-              $(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query SecretString --output text | jq -r '.password')" >> $BASH_ENV
-            echo "export AWS_RDS_ENDPOINT= \
-              $(aws cloudformation describe-stacks --stack-name lecture13-database-stack --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" --output text)" >> $BASH_ENV
+            AWS_RDS_PASSWORD= \
+              $(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query SecretString --output text | jq -r '.password')
+            echo "export AWS_RDS_PASSWORD=${AWS_RDS_PASSWORD}" >> $BASH_ENV
+            AWS_RDS_ENDPOINT= \
+              $(aws cloudformation describe-stacks --stack-name lecture13-database-stack --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" --output text)
+            echo "export AWS_RDS_ENDPOINT=${AWS_RDS_ENDPOINT}" >> $BASH_ENV
 
       - ansible-playbook/playbook:
           playbook: playbook.yml
