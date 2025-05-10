@@ -66,6 +66,8 @@ jobs:
           playbook: Ansible/playbook.yml
           playbook-options: -i Ansible/inventory.ini -vvv
 
+  #execute-serverspec:
+
 workflows:
   lecture13-provisioning:
     jobs:
