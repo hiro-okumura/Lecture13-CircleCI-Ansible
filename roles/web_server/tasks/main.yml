@@ -5,6 +5,7 @@
   changed_when: false
 
 - name: enable to install nginx1
+  become_user: root
   become: true
   shell: "amazon-linux-extras enable nginx1"
   when: "'nginx1=latest' not in amazon_linux_extras_list.stdout"
