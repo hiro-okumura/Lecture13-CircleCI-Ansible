@@ -1,0 +1,75 @@
+- name: check if rbenv is installed
+  shell: bash -lc "rbenv -v"
+  register: rbenv_exists
+  changed_when: false
+  ignore_errors: true
+
+- name: clone rbenv if not present
+  git:
+    repo: https://github.com/rbenv/rbenv.git
+    dest: /home/ec2-user/.rbenv
+  when: rbenv_exists.failed
+
+- name: add rbenv path if not present
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    create: true
+  when: rbenv_exists.failed
+
+- name: init rbenv if not present
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'eval "$(rbenv init -)"'
+    create: true
+  when: rbenv_exists.failed
+
+- name: source .bash_profile if not present
+  shell: bash -lc "source /home/ec2-user/.bash_profile"
+  when: rbenv_exists.failed
+
+- name: clone ruby-build if not present
+  git:
+    repo: https://github.com/rbenv/ruby-build.git
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
+  when: rbenv_exists.failed
+
+- name: ckeck installed ruby version
+  shell: bash -lc "rbenv versions | grep {{ ruby_version }}"
+  register: ruby_installed
+  changed_when: false
+  ignore_errors: true
+
+- name: install ruby if not present
+  shell: bash -lc "rbenv install {{ ruby_version }}"
+  when: ruby_installed.failed
+
+- name: check ruby global version
+  shell: bash -lc "ruby -v | grep {{ ruby_version }}"
+  register: ruby_global_version
+  changed_when: false
+  ignore_errors: true
+
+- name: set ruby global {{ ruby_version }}
+  shell: bash -lc "rbenv global {{ ruby_version }}"
+  when: ruby_global_version.failed
+
+- name: clone app repository
+  git:
+    repo: "https://github.com/yuta-ushijima/raisetech-live8-sample-app.git"
+    dest: "{{ app_dir }}"
+    force: yes
+
+- name: check if bundler is installed
+  shell: bash -lc "bundler -v | grep {{ bundler_version }}"
+  args:
+    chdir: "{{ app_dir }}"
+  register: check_bundler_version
+  changed_when: false
+  ignore_errors: true
+
+- name: install bundler {{ bundler_version }} if not present
+  shell: bash -lc "gem install bundler -v {{ bundler_version }}"
+  args:
+    chdir: "{{ app_dir }}"
+  when: check_bundler_version.failed

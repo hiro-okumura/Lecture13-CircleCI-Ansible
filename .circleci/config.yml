@@ -2,7 +2,9 @@ version: 2.1
 orbs:
   python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@5.3.2
-  #ansible-playbook: orbss/ansible-playbook@0.0.5
+  ansible-playbook: orbss/ansible-playbook@0.0.5
+  ruby: circleci/ruby@2.5.3
+
 jobs:
   cfn-lint:
     executor: python/default
@@ -12,7 +14,8 @@ jobs:
       - run:
           name: run cfn-lint
           command: |
-            cfn-lint -i W3002 -t test_cfn/*.yml
+            cfn-lint -i W3002 -t cloudformation/*.yml
+
   execute-cfn:
     executor: aws-cli/default
     steps:
@@ -26,14 +29,42 @@ jobs:
           name: Deploy Cloudformation
           command: |
             set -x
-            aws cloudformation deploy --template-file test_cfn/network.yml \
-              --stack-name lecture13-network-stack
-            aws cloudformation deploy --template-file test_cfn/security.yml \
-              --stack-name lecture13-security-stack --capabilities CAPABILITY_NAMED_IAM
-            aws cloudformation deploy --template-file test_cfn/application.yml \
-              --stack-name lecture13-application-stack
-            aws cloudformation deploy --template-file test_cfn/database.yml \
-              --stack-name lecture13-database-stack
+            aws cloudformation deploy --template-file cloudformation/network.yml --stack-name lecture13-network-stack
+            aws cloudformation deploy --template-file cloudformation/security.yml --stack-name lecture13-security-stack --capabilities CAPABILITY_NAMED_IAM
+            aws cloudformation deploy --template-file cloudformation/application.yml --stack-name lecture13-application-stack
+            aws cloudformation deploy --template-file cloudformation/database.yml --stack-name lecture13-database-stack
+
+  execute-ansible:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:Zg3tPXldH212I6UD/wq3xpNHwu83GIwvWU9etbPkf7E"
+      - ansible-playbook/install:
+          version: 2.10.7
+      - aws-cli/setup:
+          aws_access_key_id: AWS_ACCESS_KEY_ID
+          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+          region: AWS_DEFAULT_REGION
+
+      - run:
+          name: set environment vars
+          command: |
+            set -x
+            AWS_RDS_PASSWORD=$(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query 'SecretString' --output text | jq '.password')
+            AWS_RDS_ENDPOINT=$(aws cloudformation describe-stacks --stack-name lecture13-database-stack --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" --output text)
+            AWS_S3_BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name lecture13-application-stack --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" --output text)
+            AWS_ALB_DNS_NAME=$(aws cloudformation describe-stacks --stack-name lecture13-application-stack --query "Stacks[0].Outputs[?OutputKey=='ALBDNSName'].OutputValue" --output text)
+
+            echo "export AWS_RDS_PASSWORD=${AWS_RDS_PASSWORD}" >> $BASH_ENV
+            echo "export AWS_RDS_ENDPOINT=${AWS_RDS_ENDPOINT}" >> $BASH_ENV
+            echo "export AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}" >> $BASH_ENV
+            echo "export AWS_ALB_DNS_NAME=${AWS_ALB_DNS_NAME}" >> $BASH_ENV
+
+      - ansible-playbook/playbook:
+          playbook: playbook.yml
+          playbook-options: -i inventory.ini -vvv
 
 workflows:
   lecture13-provisioning:
@@ -42,3 +73,6 @@ workflows:
       - execute-cfn:
           requires:
             - cfn-lint
+      - execute-ansible:
+          requires:
+            - execute-cfn

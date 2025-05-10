@@ -1,11 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Security Stack for RaiseTech Lecture10\
+Description: Security Stack for RaiseTech Lecture13
 
 Parameters:
-  BaseName:
-    Type: String
-    Default: "raisetech-lecture13"
-
   MyIP:
     Description: IP address allowed to access EC2
     Type: String
@@ -18,14 +14,15 @@ Resources:
     Properties:
       GroupDescription: EC2 Security Group
       GroupName: !Sub
-        - ${BaseName}-EC2-SG
+        - ${ExportedBaseName}-EC2-SG
         - ExportedBaseName: !ImportValue ExportedBaseName
       VpcId: !ImportValue ExportedVpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          SourceSecurityGroupId: !Ref ALBSecurityGroup
+          CidrIp: !Ref MyIP
+          #SourceSecurityGroupId: !Ref ALBSecurityGroup
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
@@ -34,7 +31,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-EC2-SG
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # ALBのセキュリティグループ
   ALBSecurityGroup:
@@ -43,7 +40,7 @@ Resources:
       GroupDescription: ALB Security Group
       GroupName: !Sub
         - ${ExportedBaseName}-ALB-SG
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       VpcId: !ImportValue ExportedVpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -54,7 +51,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-ALB-SG
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # RDSのセキュリティグループ
   RDSSecurityGroup:
@@ -63,7 +60,7 @@ Resources:
       GroupDescription: RDS Security Group
       GroupName: !Sub
         - ${ExportedBaseName}-RDS-SG
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       VpcId: !ImportValue ExportedVpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -74,7 +71,7 @@ Resources:
         - Key: Name
           Value: !Sub
             - ${ExportedBaseName}-RDS-SG
-            - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # IAMロール
   S3Role:
@@ -82,7 +79,7 @@ Resources:
     Properties:
       RoleName: !Sub
         - ${ExportedBaseName}-S3Role
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -95,6 +92,11 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
       Path: "/"
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - ${ExportedBaseName}-S3Role
+            - ExportedBaseName: !ImportValue ExportedBaseName
 
   # IAMインスタンスプロファイル
   S3InstanceProfile:
@@ -103,7 +105,7 @@ Resources:
       Path: "/"
       InstanceProfileName: !Sub
         - ${ExportedBaseName}-S3InstanceProfile
-        - ExportedBaseName: { "Fn::ImportValue": ExportedBaseName }
+        - ExportedBaseName: !ImportValue ExportedBaseName
       Roles:
         - !Ref S3Role
 

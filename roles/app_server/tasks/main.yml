@@ -1,0 +1,58 @@
+- name: bundle install
+  shell: bash -lc "bundle install"
+  args:
+    chdir: "{{ app_dir }}"
+
+- name: set application.rb.j2 template
+  template:
+    src: application.rb.j2
+    dest: "{{ app_dir }}/config/application.rb"
+
+- name: set development.rb.j2 template
+  template:
+    src: development.rb.j2
+    dest: "{{ app_dir }}/config/environments/development.rb"
+
+- name: set puma.rb.j2 template
+  template:
+    src: puma.rb.j2
+    dest: "{{ app_dir }}/config/puma.rb"
+
+- name: set puma.service.j2 template
+  become_user: root
+  template:
+    src: puma.service.j2
+    dest: "/etc/systemd/system/puma.service"
+
+- name: restart systemd
+  become_user: root
+  systemd:
+    daemon_reload: yes
+
+- name: restart mysql
+  become: true
+  become_user: root
+  service:
+    name: mysqld
+    state: restarted
+
+- name: bin/setup
+  shell: bash -lc "bin/setup"
+  args:
+    chdir: "{{ app_dir }}"
+
+- name: bundle exec rails assets precompile
+  shell: bash -lc "RAILS_ENV=development bundle exec rails assets:precompile"
+  args:
+    chdir: "{{ app_dir }}"
+
+- name: create sockets and process id directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "ec2-user"
+    group: "ec2-user"
+    mode: "775"
+  loop:
+    - "{{ app_dir }}/tmp/sockets"
+    - "{{ app_dir }}/tmp/pids"

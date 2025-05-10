@@ -1,0 +1,42 @@
+- name: uninstall mariadb
+  become: true
+  become_user: root
+  yum:
+    name: mariadb-*
+    state: absent
+
+- name: install mysql rpm repository
+  become_user: root
+  yum:
+    name: "https://repo.mysql.com//mysql80-community-release-el7-7.noarch.rpm"
+    state: present
+
+- name: import mysql gpg key
+  become: true
+  become_user: root
+  rpm_key:
+    key: "https://repo.mysql.com/RPM-GPG-KEY-mysql-2023"
+    state: present
+
+- name: install mysql packages
+  become: true
+  become_user: root
+  yum:
+    name:
+      - mysql-community-server
+      - mysql-community-devel
+    state: present
+
+- name: set database.yml.j2 template
+  become: true
+  become_user: root
+  template:
+    src: database.yml.j2
+    dest: "{{ app_dir }}/config/database.yml"
+
+- name: Set storage.yml.j2 template
+  become: true
+  become_user: root
+  template:
+    src: storage.yml.j2
+    dest: "{{ app_dir }}/config/storage.yml"
