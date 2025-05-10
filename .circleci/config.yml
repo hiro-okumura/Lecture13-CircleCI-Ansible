@@ -58,7 +58,7 @@ jobs:
 
             echo "export AWS_RDS_PASSWORD=${AWS_RDS_PASSWORD}" >> $BASH_ENV
             echo "export AWS_RDS_ENDPOINT=${AWS_RDS_ENDPOINT}" >> $BASH_ENV
-            echo "export AWS_S3_BUCKET=${AWS_S3_BUCKET_NAME}" >> $BASH_ENV
+            echo "export AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}" >> $BASH_ENV
 
       - ansible-playbook/playbook:
           playbook: playbook.yml
