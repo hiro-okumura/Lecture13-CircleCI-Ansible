@@ -11,6 +11,7 @@
   when: "'nginx1=latest' not in amazon_linux_extras_list.stdout"
 
 - name: install nginx
+  become_user: root
   become: true
   yum:
     name: nginx
@@ -22,6 +23,7 @@
     mode: "644"
 
 - name: change owner /var/lib/nginx
+  become_user: root
   become: true
   file:
     path: /var/lib/nginx/
@@ -31,12 +33,14 @@
     recurse: true
 
 - name: restart nginx
+  become_user: root
   become: true
   systemd:
     name: nginx
     state: restarted
 
 - name: restart puma
+  become_user: root
   become: true
   systemd:
     name: puma
