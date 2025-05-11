@@ -67,6 +67,31 @@ jobs:
           playbook-options: -i inventory.ini -vvv
 
   execute-serverspec:
+    executor: ruby/default
+    steps:
+      - checkout
+      - ruby/install:
+          version: 3.2.3
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:Zg3tPXldH212I6UD/wq3xpNHwu83GIwvWU9etbPkf7E"
+      - run:
+          name: set ~/.ssh/config
+          command: |
+            mkdir -p ~/.ssh
+            echo "Host target" >> ~/.ssh/config
+            echo "HostName 43.206.21.197" >> ~/.ssh/config
+            echo "User ec2-user" >> ~/.ssh/config
+      - run:
+          name: install bundle
+          command: |
+            cd serverspec
+            bundle install
+      - run:
+          name: execute Serverspec
+          command: |
+            cd serverspec
+            bundle exec rake spec
 
 workflows:
   lecture13-provisioning:
@@ -78,3 +103,6 @@ workflows:
       - execute-ansible:
           requires:
             - execute-cfn
+      - execute-serverspec:
+          requires:
+            - execute-ansible
