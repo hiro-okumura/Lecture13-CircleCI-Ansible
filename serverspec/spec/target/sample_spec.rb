@@ -10,6 +10,14 @@ describe command('git --version') do
     its(:stdout) { should match /git version 2\.47\.1/ }
 end
 
+describe command('node -v') do
+    its(:stdout) { should match /17\.9\.1/ }
+end
+
+describe command('yarn -v') do
+    its(:stdout) { should match /1\.22\.19/ }
+end
+
 describe service('mysqld') do
     it { should be_running   }
 end
