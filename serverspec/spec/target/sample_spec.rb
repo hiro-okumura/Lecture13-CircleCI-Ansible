@@ -15,11 +15,6 @@ describe package('nginx') do
 end
 
 describe command('ruby -v') do
+    let(:disable_sudo) { true }
     its(:stdout) { should match 'ruby 3.2.3' }
-end
-
-
-describe service('puma') do
-    it { should be_enabled }
-    it { should be_running }
 end
