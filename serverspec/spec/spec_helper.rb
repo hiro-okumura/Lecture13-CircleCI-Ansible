@@ -18,10 +18,7 @@ host = 'target' #ENV['TARGET_HOST']
 
 #options = Net::SSH::Config.for(host)
 options = Net::SSH::Config.for('target')
-options.update(
-  StrictHostKeyChecking: 'no',
-  UserKnownHostsFile: '/dev/null'
-)
+
 options[:user] = 'ec2-user'
 #options[:user] ||= Etc.getlogin
 

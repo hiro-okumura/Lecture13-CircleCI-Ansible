@@ -81,6 +81,7 @@ jobs:
             mkdir -p ~/.ssh
             echo "Host target" >> ~/.ssh/config
             echo "HostName 43.206.21.197" >> ~/.ssh/config
+            echo "IdentityFile ~/.ssh/test-key-pair.pem\n" >> ~/.ssh/config
             echo "User ec2-user" >> ~/.ssh/config
       - run:
           name: install bundle
