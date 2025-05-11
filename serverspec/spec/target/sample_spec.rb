@@ -1,29 +1,37 @@
 require 'spec_helper'
 
-describe package('httpd'), :if => os[:family] == 'redhat' do
-  it { should be_installed }
+listen_port = 80
+
+describe command('ruby -v') do
+    its(:stdout) { should match 'ruby 3.2.3' }
 end
 
-describe package('apache2'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed }
+describe command('bundler -v') do
+    its(:stdout) { should match 'Bundler version 2.4.19' }
 end
 
-describe service('httpd'), :if => os[:family] == 'redhat' do
-  it { should be_enabled }
-  it { should be_running }
+describe command('yarn -v') do
+    its(:stdout) { should match '1.22.19' }
 end
 
-describe service('apache2'), :if => os[:family] == 'ubuntu' do
-  it { should be_enabled }
-  it { should be_running }
+describe package('nginx') do
+    it { should be_installed }
 end
 
-describe service('org.apache.httpd'), :if => os[:family] == 'darwin' do
-  it { should be_enabled }
-  it { should be_running }
+describe service('nginx') do
+    it { should be_enabled }
+    it { should be_running }
 end
 
-describe port(80) do
-  it { should be_listening }
+describe service('puma') do
+    it { should be_enabled }
+    it { should be_running }
 end
-~
+
+describe port(listen_port) do
+    it { should be_listening }
+end
+
+describe port('22') do
+    it { should be_listening }
+end
