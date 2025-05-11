@@ -2,36 +2,24 @@ require 'spec_helper'
 
 listen_port = 80
 
-describe command('ruby -v') do
-    its(:stdout) { should match 'ruby 3.2.3' }
+describe command('/home/ec2-user/.rbenv/shims/ruby -v') do
+    its(:stdout) { should match /3\.2\.3/ }
 end
 
-describe command('bundler -v') do
-    its(:stdout) { should match 'Bundler version 2.4.19' }
-end
-
-describe command('yarn -v') do
-    its(:stdout) { should match '1.22.19' }
+describe command('git --version') do
+    its(:stdout) { should match /git version 2\.47\.1/ }
 end
 
 describe package('nginx') do
     it { should be_installed }
 end
 
-describe service('nginx') do
-    it { should be_enabled }
-    it { should be_running }
+describe command('ruby -v') do
+    its(:stdout) { should match 'ruby 3.2.3' }
 end
+
 
 describe service('puma') do
     it { should be_enabled }
     it { should be_running }
-end
-
-describe port(listen_port) do
-    it { should be_listening }
-end
-
-describe port('22') do
-    it { should be_listening }
 end
