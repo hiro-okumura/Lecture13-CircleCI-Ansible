@@ -2,10 +2,6 @@ require 'spec_helper'
 
 listen_port = 80
 
-describe command('/home/ec2-user/.rbenv/shims/ruby -v') do
-    its(:stdout) { should match /3\.2\.3/ }
-end
-
 describe command('git --version') do
     its(:stdout) { should match /git version 2\.47\.1/ }
 end
@@ -20,15 +16,19 @@ describe command('yarn --version') do
     its(:stdout) { should match /^1\.22\.19/ }
 end
 
+describe command('/home/ec2-user/.rbenv/shims/ruby -v') do
+    its(:stdout) { should match /3\.2\.3/ }
+end
+
 describe service('mysqld') do
     it { should be_running   }
 end
 
-describe service('nginx') do
+describe service('puma') do
     it { should be_running }
 end
 
-describe service('puma') do
+describe service('nginx') do
     it { should be_running }
 end
 
