@@ -1,22 +1,22 @@
-- name: check if nginx1 is installed
+- name: Check If Nginx1 is Installed
   become: true
   shell: "amazon-linux-extras list"
   register: amazon_linux_extras_list
   changed_when: false
 
-- name: enable to install nginx1
+- name: Enable to Install Nginx1
   become_user: root
   become: true
   shell: "amazon-linux-extras enable nginx1"
   when: "'nginx1=latest' not in amazon_linux_extras_list.stdout"
 
-- name: install nginx
+- name: Install Nginx
   become_user: root
   become: true
   yum:
     name: nginx
 
-- name: set nginx.conf.j2 template
+- name: Set nginx.conf.j2 Template
   become_user: root
   become: true
   template:
@@ -24,7 +24,7 @@
     dest: "/etc/nginx/nginx.conf"
     mode: "644"
 
-- name: change owner /var/lib/nginx
+- name: Change Owner /var/lib/nginx
   become_user: root
   become: true
   file:
@@ -34,14 +34,14 @@
     group: ec2-user
     recurse: true
 
-- name: restart nginx
+- name: Restart Nginx
   become_user: root
   become: true
   systemd:
     name: nginx
     state: restarted
 
-- name: restart puma
+- name: Restart Puma
   become_user: root
   become: true
   systemd:

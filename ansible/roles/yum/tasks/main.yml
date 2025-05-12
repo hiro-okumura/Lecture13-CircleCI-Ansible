@@ -1,17 +1,17 @@
-- name: update yum
+- name: Update yum
   become_user: root
   yum:
     name: "*"
     state: latest
 
-- name: install git
+- name: Install Git
   become_user: root
   yum:
     name: git
     state: present
     lock_timeout: 180
 
-- name: install ruby packages
+- name: Install Rails Packages
   become_user: root
   yum:
     name:

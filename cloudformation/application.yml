@@ -127,6 +127,7 @@ Outputs:
   S3BucketName:
     Description: S3 Bucket Name
     Value: !Ref S3Bucket
+
   ALBDNSName:
     Description: ALB DNS Name
     Value: !GetAtt ApplicationLoadBalancer.DNSName

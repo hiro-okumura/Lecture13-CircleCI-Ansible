@@ -1,66 +1,66 @@
-- name: check if rbenv is installed
+- name: Check If rbenv is Installed
   shell: bash -lc "rbenv -v"
   register: rbenv_exists
   changed_when: false
   ignore_errors: true
 
-- name: clone rbenv if not present
+- name: Clone rbenv If Not Present
   git:
     repo: https://github.com/rbenv/rbenv.git
     dest: /home/ec2-user/.rbenv
   when: rbenv_exists.failed
 
-- name: add rbenv path if not present
+- name: Add rbenv Path If Not Present
   lineinfile:
     path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
     create: true
   when: rbenv_exists.failed
 
-- name: init rbenv if not present
+- name: Init rbenv If Not Present
   lineinfile:
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
     create: true
   when: rbenv_exists.failed
 
-- name: source .bash_profile if not present
+- name: Source .bash_profile If rbenv is Not Installed
   shell: bash -lc "source /home/ec2-user/.bash_profile"
   when: rbenv_exists.failed
 
-- name: clone ruby-build if not present
+- name: Clone ruby-build If rbenv is Not Installed
   git:
     repo: https://github.com/rbenv/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
   when: rbenv_exists.failed
 
-- name: ckeck installed ruby version
+- name: Check Installed Ruby Version
   shell: bash -lc "rbenv versions | grep {{ ruby_version }}"
   register: ruby_installed
   changed_when: false
   ignore_errors: true
 
-- name: install ruby if not present
+- name: Install Ruby If Not Present
   shell: bash -lc "rbenv install {{ ruby_version }}"
   when: ruby_installed.failed
 
-- name: check ruby global version
+- name: Check Ruby Global Version
   shell: bash -lc "ruby -v | grep {{ ruby_version }}"
   register: ruby_global_version
   changed_when: false
   ignore_errors: true
 
-- name: set ruby global {{ ruby_version }}
+- name: Set Ruby Global {{ ruby_version }}
   shell: bash -lc "rbenv global {{ ruby_version }}"
   when: ruby_global_version.failed
 
-- name: clone app repository
+- name: Clone Sample-App Repository
   git:
     repo: "https://github.com/yuta-ushijima/raisetech-live8-sample-app.git"
     dest: "{{ app_dir }}"
     force: yes
 
-- name: check if bundler is installed
+- name: Check If Bundler is Installed
   shell: bash -lc "bundler -v | grep {{ bundler_version }}"
   args:
     chdir: "{{ app_dir }}"
@@ -68,7 +68,7 @@
   changed_when: false
   ignore_errors: true
 
-- name: install bundler {{ bundler_version }} if not present
+- name: Install Bundler {{ bundler_version }} If Not Present
   shell: bash -lc "gem install bundler -v {{ bundler_version }}"
   args:
     chdir: "{{ app_dir }}"
