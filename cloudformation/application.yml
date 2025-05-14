@@ -10,14 +10,14 @@ Parameters:
   ExistingEIP:
     Description: Enter the Allocation ID
     Type: String
-    Default: eipalloc-00466e1d222c257ac
+    Default: eipalloc-0731fb6389536d787
 
 Resources:
   # ターゲットノード用のEC2インスタンス
   MyEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-072de986eceec5705
+      ImageId: ami-0265dc69e8de144d3
       KeyName: !Ref KeyName
       InstanceType: t2.micro
       IamInstanceProfile: !ImportValue ExportedS3InstanceProfile

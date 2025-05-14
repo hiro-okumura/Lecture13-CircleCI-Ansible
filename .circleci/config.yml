@@ -42,7 +42,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:Zg3tPXldH212I6UD/wq3xpNHwu83GIwvWU9etbPkf7E"
+            - "SHA256:fMJBF9vXJhlQFfnoB1d7MfSPh0l39ybE2NYNqARw4nA"
       - ansible-playbook/install:
           version: 2.10.7
       - aws-cli/setup:
@@ -73,13 +73,13 @@ jobs:
           version: 3.2.3
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:BUEI3gQwoQlNCSWR9Shf235hGxiCAt214XuOvSbPjkA"
+            - "SHA256:fMJBF9vXJhlQFfnoB1d7MfSPh0l39ybE2NYNqARw4nA"
       - run:
           name: Set ~/.ssh/config
           command: |
             mkdir -p ~/.ssh
             echo "Host target" >> ~/.ssh/config
-            echo "HostName 43.206.21.197" >> ~/.ssh/config
+            echo "HostName 54.178.150.33" >> ~/.ssh/config
             echo "User ec2-user" >> ~/.ssh/config
       - run:
           name: Setup Serverspec
