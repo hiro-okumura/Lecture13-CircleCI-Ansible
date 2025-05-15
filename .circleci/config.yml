@@ -50,6 +50,7 @@ jobs:
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
           region: AWS_DEFAULT_REGION
       - run:
+          # `printf %q`で特殊文字を含む値を安全にエスケープさせる。また`printf %q\n`のように明示的に改行が必要
           name: Set Environemnt Vars
           command: |
             set -x
@@ -61,22 +62,15 @@ jobs:
             echo "export AWS_RDS_ENDPOINT=${AWS_RDS_ENDPOINT}" >> $BASH_ENV
             echo "export AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}" >> $BASH_ENV
             echo "export AWS_ALB_DNS_NAME=${AWS_ALB_DNS_NAME}" >> $BASH_ENV
+            cat $BASH_ENV
+      - ansible-playbook/playbook:
+          playbook: ansible/playbook.yml
+          playbook-options: -i ansible/inventory.ini #-vvv
 
-          #echo "export AWS_RDS_PASSWORD=`${AWS_RDS_PASSWORD}`" >> $BASH_ENV
-
-      #- ansible-playbook/playbook:
-      #playbook: ansible/playbook.yml
-      #playbook-options: -i ansible/inventory.ini #-vvv
-
-      - run:
-          name: Dump BASH_ENV
-          command: cat $BASH_ENV
-
-      - run:
-          name: Run Ansible Playbook
-          command: |
-            ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
-        ##--extra-vars "db_host=${AWS_RDS_ENDPOINT}"
+      #- run:
+      #name: Run Ansible Playbook
+      #command: |
+      #ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
 
   execute-serverspec:
     executor: ruby/default
