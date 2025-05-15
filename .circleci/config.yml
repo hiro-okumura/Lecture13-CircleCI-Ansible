@@ -67,8 +67,8 @@ jobs:
           #playbook-options: -i ansible/inventory.ini #-vvv
 
       - run:
-        name: Dump BASH_ENV
-        command: cat $BASH_ENV
+          name: Dump BASH_ENV
+          command: cat $BASH_ENV
 
       - run:
         name: Run Ansible Playbook
