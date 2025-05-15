@@ -53,7 +53,7 @@ jobs:
           name: Set Environemnt Vars
           command: |
             set -x
-            AWS_RDS_PASSWORD=$(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query 'SecretString' --output text | jq '.password')
+            AWS_RDS_PASSWORD=$(aws secretsmanager get-secret-value --secret-id raisetech-rds-secret --query 'SecretString' --output text | jq -r '.password')
             AWS_RDS_ENDPOINT=$(aws cloudformation describe-stacks --stack-name lecture13-database-stack --query "Stacks[0].Outputs[?OutputKey=='RDSEndpoint'].OutputValue" --output text)
             AWS_S3_BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name lecture13-application-stack --query "Stacks[0].Outputs[?OutputKey=='S3BucketName'].OutputValue" --output text)
             AWS_ALB_DNS_NAME=$(aws cloudformation describe-stacks --stack-name lecture13-application-stack --query "Stacks[0].Outputs[?OutputKey=='ALBDNSName'].OutputValue" --output text)
@@ -61,9 +61,20 @@ jobs:
             echo "export AWS_RDS_ENDPOINT=${AWS_RDS_ENDPOINT}" >> $BASH_ENV
             echo "export AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}" >> $BASH_ENV
             echo "export AWS_ALB_DNS_NAME=${AWS_ALB_DNS_NAME}" >> $BASH_ENV
-      - ansible-playbook/playbook:
-          playbook: ansible/playbook.yml
-          playbook-options: -i ansible/inventory.ini #-vvv
+
+      #- ansible-playbook/playbook:
+          #playbook: ansible/playbook.yml
+          #playbook-options: -i ansible/inventory.ini #-vvv
+
+      - run:
+        name: Dump BASH_ENV
+        command: cat $BASH_ENV
+
+      - run:
+        name: Run Ansible Playbook
+          command: |
+          ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
+        ##--extra-vars "db_host=${AWS_RDS_ENDPOINT}"
 
   execute-serverspec:
     executor: ruby/default

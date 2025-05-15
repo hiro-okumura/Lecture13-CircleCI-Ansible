@@ -11,6 +11,7 @@ Parameters:
     Description: Enter the Allocation ID
     Type: String
     Default: eipalloc-0731fb6389536d787
+    # EIPを変更する場合は、`execute-serverspec:`の`.ssh/config`と`inventory.ini`に反映させること
 
 Resources:
   # ターゲットノード用のEC2インスタンス
