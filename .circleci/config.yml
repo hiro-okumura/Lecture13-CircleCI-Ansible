@@ -67,11 +67,6 @@ jobs:
           playbook: ansible/playbook.yml
           playbook-options: -i ansible/inventory.ini #-vvv
 
-      #- run:
-      #name: Run Ansible Playbook
-      #command: |
-      #ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
-
   execute-serverspec:
     executor: ruby/default
     steps:
