@@ -71,9 +71,9 @@ jobs:
           command: cat $BASH_ENV
 
       - run:
-        name: Run Ansible Playbook
-        command: |
-          ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
+          name: Run Ansible Playbook
+          command: |
+            ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
         ##--extra-vars "db_host=${AWS_RDS_ENDPOINT}"
 
   execute-serverspec:
