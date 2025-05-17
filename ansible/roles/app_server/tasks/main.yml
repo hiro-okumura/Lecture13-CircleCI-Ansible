@@ -19,22 +19,17 @@
     dest: "{{ app_dir }}/config/puma.rb"
 
 - name: Set puma.service.j2 Template
+  become: true
   become_user: root
   template:
     src: puma.service.j2
     dest: "/etc/systemd/system/puma.service"
 
 - name: Restart Systemd
+  become: true
   become_user: root
   systemd:
     daemon_reload: yes
-
-- name: Restart MySQL
-  become: true
-  become_user: root
-  service:
-    name: mysqld
-    state: restarted
 
 - name: Execute bin/setup
   shell: bash -lc "bin/setup"
