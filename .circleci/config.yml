@@ -102,6 +102,7 @@ jobs:
             echo "Host target" >> ~/.ssh/config
             echo "HostName ${EC2_PUBLIC_IP}" >> ~/.ssh/config
             echo "User ec2-user" >> ~/.ssh/config
+            cat ~/.ssh/config
 
       - run:
           name: Setup Serverspec
