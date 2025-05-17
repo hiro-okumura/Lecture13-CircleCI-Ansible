@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Application Stack for RaiseTech Lecture13
 
 Parameters:
-  KeyName:
+  MyKeyName:
     Description: The EC2 Key Pair to allow SSH access to the instance
     Type: AWS::EC2::KeyPair::KeyName
 
@@ -12,7 +12,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-0265dc69e8de144d3
-      KeyName: !Ref KeyName
+      KeyName: !Ref MyKeyName
       InstanceType: t2.micro
       IamInstanceProfile: !ImportValue ExportedS3InstanceProfile
       NetworkInterfaces:
