@@ -69,9 +69,10 @@ jobs:
             cat $BASH_ENV
             cat ansible/inventory.ini
 
-      - ansible-playbook/playbook:
-          playbook: ansible/playbook.yml
-          playbook-options: -i ansible/inventory.ini -vvv
+      - run:
+          name: Run Ansible Playbook
+          command: |
+            ansible-playbook -i ansible/inventory.ini -vvv ansible/playbook.yml
           no_output_timeout: 30m
 
   execute-serverspec:
