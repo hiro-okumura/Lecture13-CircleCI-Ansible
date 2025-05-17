@@ -71,7 +71,8 @@ jobs:
 
       - ansible-playbook/playbook:
           playbook: ansible/playbook.yml
-          playbook-options: -i ansible/inventory.ini
+          playbook-options: -i ansible/inventory.ini -vvv
+          no_output_timeout: 30m
 
   execute-serverspec:
     executor: ruby/default
