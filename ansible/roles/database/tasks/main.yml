@@ -21,6 +21,7 @@
   ansible.builtin.yum:
     name:
       - mysql-community-client
+      - mysql-community-devel
     state: present
 
 - name: Set database.yml.j2 Template
