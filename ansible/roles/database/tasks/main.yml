@@ -20,8 +20,7 @@
   become_user: root
   ansible.builtin.yum:
     name:
-      - mysql-community-server
-      - mysql-community-devel
+      - mysql-community-client
     state: present
 
 - name: Set database.yml.j2 Template
